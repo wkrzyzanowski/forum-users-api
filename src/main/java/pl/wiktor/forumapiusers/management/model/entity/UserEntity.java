@@ -19,12 +19,16 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String uuid;
 
+    @Column(unique = true)
     private String email;
 
+    @Column(unique = true)
     private String nick;
 
+    @Column(unique = true)
     private String password;
 
     private LocalDateTime lastLogin;

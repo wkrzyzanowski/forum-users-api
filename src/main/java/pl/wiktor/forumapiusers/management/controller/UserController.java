@@ -7,11 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import pl.wiktor.forumapiusers.management.model.dto.UserDTO;
 import pl.wiktor.forumapiusers.management.model.dto.validation.CreateUserValidation;
 import pl.wiktor.forumapiusers.management.model.exceptions.InsufficientUserDataException;
-import pl.wiktor.forumapiusers.management.model.exceptions.UserNotFoundException;
+import pl.wiktor.forumapiusers.management.model.exceptions.UserException;
 import pl.wiktor.forumapiusers.management.model.exceptions.WrongCounterParameterException;
 import pl.wiktor.forumapiusers.management.service.UserService;
 
 import javax.websocket.server.PathParam;
+import java.text.MessageFormat;
 import java.util.List;
 
 @Slf4j
@@ -38,21 +39,21 @@ public class UserController {
     @PutMapping(path = "/{uuid}")
     public ResponseEntity<UserDTO> editSingleUser(@PathVariable(name = "uuid") String uuid, @RequestBody UserDTO userDTO) {
         if (uuid == null || uuid.isEmpty() || userDTO == null) {
-            throw new UserNotFoundException(uuid);
+            throw new UserException(MessageFormat.format(UserException.UUID_NOT_FOUND, uuid));
         }
         log.debug(userDTO.toString());
-        return ResponseEntity.ok(userService.editUser(uuid, userDTO));
+        return ResponseEntity.ok(userService.updateUser(uuid, userDTO));
     }
 
     @PutMapping(path = "/{uuid}/counter")
-    public ResponseEntity<UserDTO> incrementHelpCounter(@PathVariable(name = "uuid") String uuid, @PathParam("sign") String sign) {
+    public ResponseEntity<UserDTO> editHelpCounter(@PathVariable(name = "uuid") String uuid, @PathParam("sign") String sign) {
         if (uuid == null || uuid.isEmpty()) {
-            throw new UserNotFoundException(uuid);
+            throw new UserException(MessageFormat.format(UserException.UUID_NOT_FOUND, uuid));
         }
         if (sign != null && !sign.equals("plus") && !sign.equals("minus")) {
             throw new WrongCounterParameterException("Only two values are possible: 'plus' or 'minus'.");
         }
-        return ResponseEntity.ok(userService.editUserHelpCounter(uuid, sign));
+        return ResponseEntity.ok(userService.updateUserHelpCounter(uuid, sign));
     }
 
 
