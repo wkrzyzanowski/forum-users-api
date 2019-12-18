@@ -37,7 +37,8 @@ public class UserController {
     }
 
     @PutMapping(path = "/{uuid}")
-    public ResponseEntity<UserDTO> editSingleUser(@PathVariable(name = "uuid") String uuid, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> editSingleUser(@PathVariable(name = "uuid") String uuid,
+                                                  @RequestBody @Validated(CreateUserValidation.class) UserDTO userDTO) {
         if (uuid == null || uuid.isEmpty() || userDTO == null) {
             throw new UserException(MessageFormat.format(UserException.UUID_NOT_FOUND, uuid));
         }
@@ -46,7 +47,8 @@ public class UserController {
     }
 
     @PutMapping(path = "/{uuid}/counter")
-    public ResponseEntity<UserDTO> editHelpCounter(@PathVariable(name = "uuid") String uuid, @PathParam("sign") String sign) {
+    public ResponseEntity<UserDTO> editHelpCounter(@PathVariable(name = "uuid") String uuid,
+                                                   @PathParam("sign") String sign) {
         if (uuid == null || uuid.isEmpty()) {
             throw new UserException(MessageFormat.format(UserException.UUID_NOT_FOUND, uuid));
         }

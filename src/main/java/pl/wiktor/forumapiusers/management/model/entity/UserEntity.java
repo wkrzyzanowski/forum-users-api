@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
@@ -34,5 +36,11 @@ public class UserEntity {
     private LocalDateTime lastLogin;
 
     private int helpCount;
+
+    @ManyToMany(cascade = CascadeType.DETACH)
+    @JoinTable(
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private Set<RoleEntity> roles = new HashSet<>();
 
 }

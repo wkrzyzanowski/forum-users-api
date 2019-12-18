@@ -2,11 +2,7 @@ package pl.wiktor.forumapiusers;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-//TODO: Disabled auto security configuration
 @SpringBootApplication
 public class ForumApiUsersApplication {
 
@@ -14,9 +10,5 @@ public class ForumApiUsersApplication {
         SpringApplication.run(ForumApiUsersApplication.class, args);
     }
 
-    @Bean
-    public PasswordEncoder getPasswordEncoderBean() {
-        return new BCryptPasswordEncoder();
-    }
 
 }
