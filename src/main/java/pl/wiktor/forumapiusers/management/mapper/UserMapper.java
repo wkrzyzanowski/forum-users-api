@@ -1,12 +1,22 @@
 package pl.wiktor.forumapiusers.management.mapper;
 
 import pl.wiktor.forumapiusers.management.model.dto.UserDTO;
+import pl.wiktor.forumapiusers.management.model.entity.RoleEntity;
 import pl.wiktor.forumapiusers.management.model.entity.UserEntity;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UserMapper {
 
 
     public static UserDTO fromEntityToDto(UserEntity userEntity) {
+
+        Set<String> roles = userEntity.getRoles()
+                .stream()
+                .map(RoleEntity::getName)
+                .collect(Collectors.toSet());
+
         return UserDTO.builder()
                 .uuid(userEntity.getUuid())
                 .email(userEntity.getEmail())
@@ -14,6 +24,7 @@ public class UserMapper {
                 .nick(userEntity.getNick())
                 .lastLogin(userEntity.getLastLogin())
                 .helpCount(userEntity.getHelpCount())
+                .roles(roles)
                 .build();
     }
 

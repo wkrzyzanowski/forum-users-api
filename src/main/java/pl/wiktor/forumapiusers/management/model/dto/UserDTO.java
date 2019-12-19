@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -34,5 +35,8 @@ public class UserDTO {
     private LocalDateTime lastLogin;
 
     private int helpCount;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Set<String> roles;
 
 }

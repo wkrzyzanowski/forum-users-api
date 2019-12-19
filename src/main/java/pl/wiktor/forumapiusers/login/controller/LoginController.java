@@ -4,13 +4,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.wiktor.forumapiusers.config.jwt.JwtUtil;
 import pl.wiktor.forumapiusers.login.model.AuthRequest;
 import pl.wiktor.forumapiusers.login.model.AuthResponse;
+import pl.wiktor.forumapiusers.login.model.UserSecurity;
 import pl.wiktor.forumapiusers.login.service.UserLoginService;
 
 import javax.validation.Valid;
@@ -38,9 +38,9 @@ public class LoginController {
             throw new Exception("Incorrect name or password", e);
         }
 
-        final UserDetails userDetails = userLoginService.loadUserByUsername(authRequest.getUsername());
+        final UserSecurity userSecurity = userLoginService.loadUserByUsername(authRequest.getUsername());
 
-        final String JWT = "Bearer " + jwtUtil.generateToken(userDetails);
+        final String JWT = "Bearer " + jwtUtil.generateToken(userSecurity);
 
         return ResponseEntity.ok(new AuthResponse(JWT));
     }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.wiktor.forumapiusers.management.model.exceptions.ErrorResponse;
+import pl.wiktor.forumapiusers.management.model.exceptions.RoleException;
 import pl.wiktor.forumapiusers.management.model.exceptions.UserException;
 import pl.wiktor.forumapiusers.management.model.exceptions.WrongCounterParameterException;
 
@@ -24,7 +25,16 @@ import java.util.List;
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({UserException.class})
-    public ResponseEntity<Object> sendUserNotFoundMessage(UserException e) {
+    public ResponseEntity<Object> handleUserExceptions(UserException e) {
+        String message = MessageFormat.format("Unexpected error occurs: {0}", e.getMessage());
+        log.error(message);
+        return ResponseEntity
+                .badRequest()
+                .body(Collections.singletonList(new ErrorResponse(message, e.getDetails())));
+    }
+
+    @ExceptionHandler({RoleException.class})
+    public ResponseEntity<Object> handleRoleExceptions(RoleException e) {
         String message = MessageFormat.format("Unexpected error occurs: {0}", e.getMessage());
         log.error(message);
         return ResponseEntity
