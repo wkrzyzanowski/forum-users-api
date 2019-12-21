@@ -39,7 +39,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         String message = MessageFormat.format("Unexpected error occurs: {0}", e.getMessage());
         log.error(message);
         return ResponseEntity
-                .badRequest()
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(Collections.singletonList(new ErrorResponse(message)));
     }
 

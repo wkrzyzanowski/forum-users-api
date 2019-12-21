@@ -3,7 +3,6 @@ package pl.wiktor.forumapiusers.login.controller;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,12 +33,9 @@ public class LoginController {
     }
 
     @PostMapping(path = "/auth/login")
-    public ResponseEntity<AuthResponse> obtainJWT(@RequestBody @Valid AuthRequest authRequest) throws Exception {
-        try {
-            authManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect name or password", e);
-        }
+    public ResponseEntity<AuthResponse> obtainJWT(@RequestBody @Valid AuthRequest authRequest) {
+
+        authManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
         final UserSecurity userSecurity = userLoginService.loadUserByUsername(authRequest.getUsername());
 
