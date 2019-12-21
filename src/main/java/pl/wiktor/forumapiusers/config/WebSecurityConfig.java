@@ -1,12 +1,14 @@
 package pl.wiktor.forumapiusers.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,34 +24,30 @@ import pl.wiktor.forumapiusers.login.service.UserLoginService;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-// DISABLED SECURITY
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .headers().frameOptions().disable();
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/**").permitAll()
-//                .antMatchers("/usersdb/**").permitAll()
-//                .anyRequest().authenticated();
-//    }
-
     @Autowired
     private UserLoginService userLoginService;
 
     @Autowired
     private JwtRequestFilter requestFilter;
 
+    @Value("${authentication.auth.path}")
+    String AUTH_ENDPOINT;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .headers().frameOptions().disable().and()
                 .authorizeRequests()
-                .antMatchers("/auth/login").permitAll()
+                .antMatchers(AUTH_ENDPOINT).permitAll()
                 .antMatchers("/usersdb/**").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(AUTH_ENDPOINT);
     }
 
     @Override

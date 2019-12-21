@@ -150,4 +150,10 @@ public class UserService {
         userEntity.setRoles(new HashSet<>());
         userEntity.getRoles().add(userRole);
     }
+
+    public boolean deleteUser(String uuid) {
+        UserEntity userEntity = getUserByUuid(uuid);
+        userRepository.delete(userEntity);
+        return true;
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,9 +25,9 @@ public class UserSecurity implements UserDetails {
     @NotEmpty
     private String password;
 
-    private Collection<SimpleGrantedAuthority> authorities;
+    private List<SimpleGrantedAuthority> authorities;
 
-    public UserSecurity(@NotNull @NotEmpty String login, @NotNull @NotEmpty String password, Collection<SimpleGrantedAuthority> authorities) {
+    public UserSecurity(@NotNull @NotEmpty String login, @NotNull @NotEmpty String password, List<SimpleGrantedAuthority> authorities) {
         this.login = login;
         this.password = password;
         this.authorities = authorities;

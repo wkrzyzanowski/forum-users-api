@@ -3,18 +3,24 @@ package pl.wiktor.forumapiusers.config.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
 public class JwtUtil {
 
-    private String SECRET_KEY = "super_secret";
+    @Value("${jwt.config.expirationTime}")
+    String TOKEN_EXPIRE_TIME;
+
+    @Value("${jwt.config.secret}")
+    String SECRET_KEY;
+
+    final String AUTHORITIES_CLAIM = "authorities";
 
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -39,16 +45,26 @@ public class JwtUtil {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("authorities", userDetails.getAuthorities());
+
+        List<String> roles = new ArrayList<>();
+
+        userDetails.getAuthorities().forEach(x -> {
+            SimpleGrantedAuthority auth = (SimpleGrantedAuthority) x;
+            roles.add(auth.getAuthority());
+        });
+
+        claims.put(AUTHORITIES_CLAIM, roles);
         return createToken(claims, userDetails.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
+        long currentTime = System.currentTimeMillis();
+        long jwtExpirationTime = currentTime + Long.parseLong(TOKEN_EXPIRE_TIME);
         return Jwts.builder()
-                .setClaims(claims)
+                .claim(AUTHORITIES_CLAIM, claims.get(AUTHORITIES_CLAIM))
                 .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .setIssuedAt(new Date(currentTime))
+                .setExpiration(new Date(jwtExpirationTime))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }

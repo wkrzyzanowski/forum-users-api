@@ -10,8 +10,8 @@ import pl.wiktor.forumapiusers.management.model.entity.UserEntity;
 import pl.wiktor.forumapiusers.management.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -34,7 +34,7 @@ public class UserLoginService implements UserDetailsService {
         UserEntity user = userRepository.getByEmail(email).orElseThrow(() ->
                 new UsernameNotFoundException("User doesn't exist."));
 
-        Set<SimpleGrantedAuthority> roles = new HashSet<>();
+        List<SimpleGrantedAuthority> roles = new ArrayList<>();
 
         user.getRoles()
                 .forEach(role -> {

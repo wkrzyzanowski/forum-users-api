@@ -2,6 +2,7 @@ package pl.wiktor.forumapiusers.management.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.wiktor.forumapiusers.management.model.dto.UserDTO;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/mgmt/users")
+@RequestMapping("/mgmt")
 public class UserController {
 
     private UserService userService;
@@ -26,17 +27,20 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(path = "/")
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MOD"})
+    @GetMapping(path = "/users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping(path = "/{uuid}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MOD"})
+    @GetMapping(path = "/users/{uuid}")
     public ResponseEntity<UserDTO> getSingleUser(@PathVariable(name = "uuid") String uuid) {
         return ResponseEntity.ok(userService.getSingleUser(uuid));
     }
 
-    @PutMapping(path = "/{uuid}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MOD"})
+    @PutMapping(path = "/users/{uuid}")
     public ResponseEntity<UserDTO> editSingleUser(@PathVariable(name = "uuid") String uuid,
                                                   @RequestBody @Validated(CreateUserValidation.class) UserDTO userDTO) {
         if (uuid == null || uuid.isEmpty() || userDTO == null) {
@@ -46,7 +50,16 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(uuid, userDTO));
     }
 
-    @PutMapping(path = "/{uuid}/counter")
+    @Secured({"ROLE_ADMIN", "ROLE_MOD"})
+    @DeleteMapping(path = "/users/{uuid}")
+    public ResponseEntity<Boolean> deleteUser(@PathVariable(name = "uuid") String uuid) {
+        if (uuid == null || uuid.isEmpty()) {
+            throw new UserException(MessageFormat.format(UserException.UUID_NOT_FOUND, uuid));
+        }
+        return ResponseEntity.ok(userService.deleteUser(uuid));
+    }
+
+    @PutMapping(path = "/users/{uuid}/counter")
     public ResponseEntity<UserDTO> editHelpCounter(@PathVariable(name = "uuid") String uuid,
                                                    @PathParam("sign") String sign) {
         if (uuid == null || uuid.isEmpty()) {
@@ -59,7 +72,7 @@ public class UserController {
     }
 
 
-    @PostMapping(path = "/")
+    @PostMapping(path = "/users")
     public ResponseEntity<UserDTO> createNewUser(@RequestBody @Validated(CreateUserValidation.class) UserDTO userDTO) {
         if (userDTO == null) {
             throw new InsufficientUserDataException("Full user data should be passed to create new user.");

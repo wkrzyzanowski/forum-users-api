@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,6 +32,15 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .badRequest()
                 .body(Collections.singletonList(new ErrorResponse(message, e.getDetails())));
+    }
+
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<Object> handleUserExceptions(BadCredentialsException e) {
+        String message = MessageFormat.format("Unexpected error occurs: {0}", e.getMessage());
+        log.error(message);
+        return ResponseEntity
+                .badRequest()
+                .body(Collections.singletonList(new ErrorResponse(message)));
     }
 
     @ExceptionHandler({RoleException.class})

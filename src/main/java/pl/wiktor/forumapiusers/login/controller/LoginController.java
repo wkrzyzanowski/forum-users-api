@@ -1,5 +1,6 @@
 package pl.wiktor.forumapiusers.login.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +18,8 @@ import javax.validation.Valid;
 
 @RestController
 public class LoginController {
+
+    private static final String TOKEN_PREFIX = "Bearer ";
 
     private AuthenticationManager authManager;
 
@@ -40,9 +43,9 @@ public class LoginController {
 
         final UserSecurity userSecurity = userLoginService.loadUserByUsername(authRequest.getUsername());
 
-        final String JWT = "Bearer " + jwtUtil.generateToken(userSecurity);
+        final String JWT = TOKEN_PREFIX + jwtUtil.generateToken(userSecurity);
 
-        return ResponseEntity.ok(new AuthResponse(JWT));
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, JWT).build();
     }
 
 
