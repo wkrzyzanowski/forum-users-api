@@ -59,6 +59,7 @@ public class UserManagementController {
         return ResponseEntity.ok(userManagementService.deleteUser(uuid));
     }
 
+    @Secured({"ROLE_USER"})
     @PutMapping(path = "/users/{uuid}/counter")
     public ResponseEntity<UserManagementDTO> editHelpCounter(@PathVariable(name = "uuid") String uuid,
                                                              @PathParam("sign") String sign) {

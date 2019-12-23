@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -33,6 +34,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${authentication.auth.path}")
     String AUTH_ENDPOINT;
 
+    @Value("${user.create.path}")
+    String CREATE_USER_ENDPOINT;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -40,6 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(AUTH_ENDPOINT).permitAll()
                 .antMatchers("/usersdb/**").permitAll()
+                .antMatchers(HttpMethod.POST, CREATE_USER_ENDPOINT).permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);

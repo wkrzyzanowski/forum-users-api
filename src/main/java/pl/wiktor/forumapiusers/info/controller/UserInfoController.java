@@ -1,6 +1,7 @@
 package pl.wiktor.forumapiusers.info.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ public class UserInfoController {
         this.userInfoService = userInfoService;
     }
 
+    @Secured({"ROLE_USER"})
     @PostMapping("/users")
     public ResponseEntity<Object> getUserListByUuidList(@RequestBody List<String> uuidList) {
         return ResponseEntity.ok(userInfoService.getUserListByUuidList(uuidList));
