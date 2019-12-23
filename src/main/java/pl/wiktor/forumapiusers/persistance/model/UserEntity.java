@@ -1,4 +1,4 @@
-package pl.wiktor.forumapiusers.management.model.entity;
+package pl.wiktor.forumapiusers.persistance.model;
 
 import lombok.*;
 

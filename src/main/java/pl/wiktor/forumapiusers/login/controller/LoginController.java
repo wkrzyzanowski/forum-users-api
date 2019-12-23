@@ -7,7 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.wiktor.forumapiusers.config.jwt.JwtUtil;
+import pl.wiktor.forumapiusers.config.security.jwt.JwtUtil;
 import pl.wiktor.forumapiusers.login.model.AuthRequest;
 import pl.wiktor.forumapiusers.login.model.AuthResponse;
 import pl.wiktor.forumapiusers.login.model.UserSecurity;

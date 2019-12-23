@@ -1,4 +1,4 @@
-package pl.wiktor.forumapiusers.management.model.exceptions;
+package pl.wiktor.forumapiusers.exception;
 
 public class InsufficientUserDataException extends RuntimeException {
 

@@ -15,7 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pl.wiktor.forumapiusers.config.jwt.JwtRequestFilter;
+import pl.wiktor.forumapiusers.config.security.jwt.JwtRequestFilter;
 import pl.wiktor.forumapiusers.login.service.UserLoginService;
 
 

@@ -3,13 +3,13 @@ package pl.wiktor.forumapiusers.management.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.wiktor.forumapiusers.management.mapper.UserMapper;
-import pl.wiktor.forumapiusers.management.model.dto.UserDTO;
-import pl.wiktor.forumapiusers.management.model.entity.RoleEntity;
-import pl.wiktor.forumapiusers.management.model.entity.UserEntity;
-import pl.wiktor.forumapiusers.management.model.exceptions.UserException;
-import pl.wiktor.forumapiusers.management.repository.RoleRepository;
-import pl.wiktor.forumapiusers.management.repository.UserRepository;
+import pl.wiktor.forumapiusers.management.mapper.UserManagementMapper;
+import pl.wiktor.forumapiusers.management.model.UserManagementDTO;
+import pl.wiktor.forumapiusers.persistance.model.RoleEntity;
+import pl.wiktor.forumapiusers.persistance.model.UserEntity;
+import pl.wiktor.forumapiusers.exception.UserException;
+import pl.wiktor.forumapiusers.persistance.repository.RoleRepository;
+import pl.wiktor.forumapiusers.persistance.repository.UserRepository;
 
 import java.text.MessageFormat;
 import java.util.HashSet;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class UserService {
+public class UserManagementService {
 
     private UserRepository userRepository;
 
@@ -27,32 +27,32 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserManagementService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<UserDTO> getAllUsers() {
+    public List<UserManagementDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(UserMapper::fromEntityToDto)
+                .map(UserManagementMapper::fromEntityToDto)
                 .collect(Collectors.toList());
     }
 
-    public UserDTO getSingleUser(String uuid) {
+    public UserManagementDTO getSingleUser(String uuid) {
         UserEntity userEntity = getUserByUuid(uuid);
-        return UserMapper
+        return UserManagementMapper
                 .fromEntityToDto(userEntity);
     }
 
 
-    public UserDTO createNewUser(UserDTO userDTO) {
+    public UserManagementDTO createNewUser(UserManagementDTO userManagementDTO) {
 
         UserEntity userEntity = UserEntity.builder()
-                .nick(userDTO.getNick())
-                .email(userDTO.getEmail())
-                .password(passwordEncoder.encode(userDTO.getPassword()))
+                .nick(userManagementDTO.getNick())
+                .email(userManagementDTO.getEmail())
+                .password(passwordEncoder.encode(userManagementDTO.getPassword()))
                 .uuid(UUID.randomUUID().toString())
                 .lastLogin(null)
                 .helpCount(0)
@@ -62,17 +62,17 @@ public class UserService {
 
         persistUserEntityWithErrorHandling(userEntity);
 
-        return UserMapper.fromEntityToDto(userEntity);
+        return UserManagementMapper.fromEntityToDto(userEntity);
     }
 
-    public UserDTO updateUser(String uuid, UserDTO userDTO) {
+    public UserManagementDTO updateUser(String uuid, UserManagementDTO userManagementDTO) {
         UserEntity userEntity = getUserByUuid(uuid);
-        editUserFields(userDTO, userEntity);
+        editUserFields(userManagementDTO, userEntity);
         persistUserEntityWithErrorHandling(userEntity);
-        return UserMapper.fromEntityToDto(userEntity);
+        return UserManagementMapper.fromEntityToDto(userEntity);
     }
 
-    public UserDTO updateUserHelpCounter(String uuid, String sign) {
+    public UserManagementDTO updateUserHelpCounter(String uuid, String sign) {
 
         UserEntity userEntity = getUserByUuid(uuid);
 
@@ -102,7 +102,7 @@ public class UserService {
                     MessageFormat.format("Cannot increase/decrease help counter for user with UUID: {0}", userEntity.getUuid()),
                     e.toString());
         }
-        return UserMapper.fromEntityToDto(userEntity);
+        return UserManagementMapper.fromEntityToDto(userEntity);
     }
 
     UserEntity getUserByUuid(String uuid) {
@@ -122,25 +122,25 @@ public class UserService {
         }
     }
 
-    private void editUserFields(UserDTO userDTO, UserEntity userEntity) {
-        if (userDTO.getNick() != null && !userDTO.getNick().isEmpty()) {
-            userEntity.setNick(userDTO.getNick());
+    private void editUserFields(UserManagementDTO userManagementDTO, UserEntity userEntity) {
+        if (userManagementDTO.getNick() != null && !userManagementDTO.getNick().isEmpty()) {
+            userEntity.setNick(userManagementDTO.getNick());
         }
 
-        if (userDTO.getEmail() != null && !userDTO.getEmail().isEmpty()) {
-            userEntity.setEmail(userDTO.getEmail());
+        if (userManagementDTO.getEmail() != null && !userManagementDTO.getEmail().isEmpty()) {
+            userEntity.setEmail(userManagementDTO.getEmail());
         }
 
-        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-            userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        if (userManagementDTO.getPassword() != null && !userManagementDTO.getPassword().isEmpty()) {
+            userEntity.setPassword(passwordEncoder.encode(userManagementDTO.getPassword()));
         }
 
-        if (userDTO.getEmail() != null && !userDTO.getEmail().isEmpty()) {
-            userEntity.setEmail(userDTO.getEmail());
+        if (userManagementDTO.getEmail() != null && !userManagementDTO.getEmail().isEmpty()) {
+            userEntity.setEmail(userManagementDTO.getEmail());
         }
 
-        if (userDTO.getLastLogin() != null) {
-            userEntity.setLastLogin(userDTO.getLastLogin());
+        if (userManagementDTO.getLastLogin() != null) {
+            userEntity.setLastLogin(userManagementDTO.getLastLogin());
         }
 
     }

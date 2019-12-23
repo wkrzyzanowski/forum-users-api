@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import pl.wiktor.forumapiusers.management.model.dto.UserDTO;
-import pl.wiktor.forumapiusers.management.model.exceptions.RoleException;
-import pl.wiktor.forumapiusers.management.model.exceptions.UserException;
-import pl.wiktor.forumapiusers.management.service.RoleService;
+import pl.wiktor.forumapiusers.management.model.UserManagementDTO;
+import pl.wiktor.forumapiusers.exception.RoleException;
+import pl.wiktor.forumapiusers.exception.UserException;
+import pl.wiktor.forumapiusers.management.service.RoleManagementService;
 
 import java.text.MessageFormat;
 import java.util.Set;
@@ -16,14 +16,14 @@ import java.util.Set;
 @Slf4j
 @RestController
 @RequestMapping("/mgmt/roles")
-public class RoleController {
+public class RoleManagementController {
 
     @Autowired
-    private RoleService roleService;
+    private RoleManagementService roleManagementService;
 
     @Secured({"ROLE_ADMIN"})
     @PutMapping("/{uuid}")
-    public ResponseEntity<UserDTO> manageUserRole(@PathVariable("uuid") String userUuid, @RequestBody Set<String> roles) {
+    public ResponseEntity<UserManagementDTO> manageUserRole(@PathVariable("uuid") String userUuid, @RequestBody Set<String> roles) {
 
         if (userUuid == null || userUuid.isEmpty()) {
             throw new UserException(MessageFormat.format(UserException.UUID_NOT_FOUND, userUuid));
@@ -33,7 +33,7 @@ public class RoleController {
             throw new RoleException(MessageFormat.format(RoleException.NAME_NOT_FOUND, roles.toString()));
         }
 
-        return ResponseEntity.ok().body(roleService.manageUserRoles(userUuid, roles));
+        return ResponseEntity.ok().body(roleManagementService.manageUserRoles(userUuid, roles));
     }
 
 }

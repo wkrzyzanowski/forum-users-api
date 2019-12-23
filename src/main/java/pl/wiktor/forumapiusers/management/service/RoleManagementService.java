@@ -1,39 +1,39 @@
 package pl.wiktor.forumapiusers.management.service;
 
 import org.springframework.stereotype.Service;
-import pl.wiktor.forumapiusers.management.mapper.UserMapper;
-import pl.wiktor.forumapiusers.management.model.dto.UserDTO;
-import pl.wiktor.forumapiusers.management.model.entity.RoleEntity;
-import pl.wiktor.forumapiusers.management.model.entity.UserEntity;
-import pl.wiktor.forumapiusers.management.model.exceptions.RoleException;
-import pl.wiktor.forumapiusers.management.repository.RoleRepository;
+import pl.wiktor.forumapiusers.management.mapper.UserManagementMapper;
+import pl.wiktor.forumapiusers.management.model.UserManagementDTO;
+import pl.wiktor.forumapiusers.persistance.model.RoleEntity;
+import pl.wiktor.forumapiusers.persistance.model.UserEntity;
+import pl.wiktor.forumapiusers.exception.RoleException;
+import pl.wiktor.forumapiusers.persistance.repository.RoleRepository;
 
 import java.text.MessageFormat;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleService {
+public class RoleManagementService {
 
-    private UserService userService;
+    private UserManagementService userManagementService;
 
     private RoleRepository roleRepository;
 
-    public RoleService(UserService userService, RoleRepository roleRepository) {
-        this.userService = userService;
+    public RoleManagementService(UserManagementService userManagementService, RoleRepository roleRepository) {
+        this.userManagementService = userManagementService;
         this.roleRepository = roleRepository;
     }
 
 
-    public UserDTO manageUserRoles(String uuid, Set<String> roles) {
-        UserEntity userEntity = userService.getUserByUuid(uuid);
+    public UserManagementDTO manageUserRoles(String uuid, Set<String> roles) {
+        UserEntity userEntity = userManagementService.getUserByUuid(uuid);
         Set<RoleEntity> newRoles = resolveRolesFromStrings(roles);
 
         userEntity.setRoles(newRoles);
 
-        userService.persistUserEntityWithErrorHandling(userEntity);
+        userManagementService.persistUserEntityWithErrorHandling(userEntity);
 
-        return UserMapper.fromEntityToDto(userEntity);
+        return UserManagementMapper.fromEntityToDto(userEntity);
     }
 
     private Set<RoleEntity> resolveRolesFromStrings(Set<String> roles) {

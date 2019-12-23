@@ -1,8 +1,8 @@
-package pl.wiktor.forumapiusers.management.model.dto;
+package pl.wiktor.forumapiusers.management.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import pl.wiktor.forumapiusers.management.model.dto.validation.CreateUserValidation;
+import pl.wiktor.forumapiusers.management.model.validation.CreateUserValidation;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
@@ -16,9 +16,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @ToString
-public class UserDTO {
+public class UserManagementDTO {
 
-    @Column(unique = true, nullable = false)
     private String uuid;
 
     @NotNull(groups = {CreateUserValidation.class})

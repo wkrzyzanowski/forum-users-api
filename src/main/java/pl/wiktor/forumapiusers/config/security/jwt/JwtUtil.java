@@ -1,4 +1,4 @@
-package pl.wiktor.forumapiusers.config.jwt;
+package pl.wiktor.forumapiusers.config.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

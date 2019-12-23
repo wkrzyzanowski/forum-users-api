@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.wiktor.forumapiusers.login.model.UserSecurity;
-import pl.wiktor.forumapiusers.management.model.entity.UserEntity;
-import pl.wiktor.forumapiusers.management.repository.UserRepository;
+import pl.wiktor.forumapiusers.persistance.model.UserEntity;
+import pl.wiktor.forumapiusers.persistance.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

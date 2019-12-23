@@ -1,4 +1,4 @@
-package pl.wiktor.forumapiusers.management.controller;
+package pl.wiktor.forumapiusers.exception.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.wiktor.forumapiusers.management.model.exceptions.ErrorResponse;
-import pl.wiktor.forumapiusers.management.model.exceptions.RoleException;
-import pl.wiktor.forumapiusers.management.model.exceptions.UserException;
-import pl.wiktor.forumapiusers.management.model.exceptions.WrongCounterParameterException;
+import pl.wiktor.forumapiusers.exception.model.ErrorResponse;
+import pl.wiktor.forumapiusers.exception.RoleException;
+import pl.wiktor.forumapiusers.exception.UserException;
+import pl.wiktor.forumapiusers.exception.WrongCounterParameterException;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

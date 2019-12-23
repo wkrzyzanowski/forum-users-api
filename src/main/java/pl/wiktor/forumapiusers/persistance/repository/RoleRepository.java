@@ -1,7 +1,7 @@
-package pl.wiktor.forumapiusers.management.repository;
+package pl.wiktor.forumapiusers.persistance.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.wiktor.forumapiusers.management.model.entity.RoleEntity;
+import pl.wiktor.forumapiusers.persistance.model.RoleEntity;
 
 import java.util.Optional;
 

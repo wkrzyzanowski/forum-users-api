@@ -1,4 +1,4 @@
-package pl.wiktor.forumapiusers.config.jwt;
+package pl.wiktor.forumapiusers.config.security.jwt;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
