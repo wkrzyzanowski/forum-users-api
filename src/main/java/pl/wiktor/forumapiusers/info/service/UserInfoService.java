@@ -40,4 +40,9 @@ public class UserInfoService {
         return userList;
     }
 
+    public UserInfoDTO getUserUuid(String uuid) {
+        return UserInfoMapper.fromEntityToDto(userRepository.getByUuid(uuid)
+                .orElseThrow(() -> new UserException(
+                        MessageFormat.format(UserException.UUID_NOT_FOUND, uuid))));
+    }
 }
