@@ -50,6 +50,7 @@ public class UserLoginService implements UserDetailsService {
                 .login(user.getEmail())
                 .password(user.getPassword())
                 .authorities(roles)
+                .uuid(user.getUuid())
                 .build();
     }
 }

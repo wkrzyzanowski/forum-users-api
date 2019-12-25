@@ -25,11 +25,14 @@ public class UserSecurity implements UserDetails {
     @NotEmpty
     private String password;
 
+    private String uuid;
+
     private List<SimpleGrantedAuthority> authorities;
 
-    public UserSecurity(@NotNull @NotEmpty String login, @NotNull @NotEmpty String password, List<SimpleGrantedAuthority> authorities) {
+    public UserSecurity(@NotNull @NotEmpty String login, @NotNull @NotEmpty String password, String uuid, List<SimpleGrantedAuthority> authorities) {
         this.login = login;
         this.password = password;
+        this.uuid = uuid;
         this.authorities = authorities;
     }
 

@@ -5,11 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.wiktor.forumapiusers.management.model.UserManagementDTO;
-import pl.wiktor.forumapiusers.management.model.validation.CreateUserValidation;
 import pl.wiktor.forumapiusers.exception.InsufficientUserDataException;
 import pl.wiktor.forumapiusers.exception.UserException;
 import pl.wiktor.forumapiusers.exception.WrongCounterParameterException;
+import pl.wiktor.forumapiusers.management.model.UserManagementDTO;
+import pl.wiktor.forumapiusers.management.model.validation.CreateUserValidation;
 import pl.wiktor.forumapiusers.management.service.UserManagementService;
 
 import javax.websocket.server.PathParam;
@@ -67,7 +67,7 @@ public class UserManagementController {
             throw new UserException(MessageFormat.format(UserException.UUID_NOT_FOUND, uuid));
         }
         if (sign != null && !sign.equals("plus") && !sign.equals("minus")) {
-            throw new WrongCounterParameterException("Only two values are possible: 'plus' or 'minus'.");
+            throw new WrongCounterParameterException("Only two values are possible: 'plus' or 'minus'. Was: " + sign);
         }
         return ResponseEntity.ok(userManagementService.updateUserHelpCounter(uuid, sign));
     }

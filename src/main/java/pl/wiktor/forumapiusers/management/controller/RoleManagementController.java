@@ -5,12 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import pl.wiktor.forumapiusers.management.model.UserManagementDTO;
 import pl.wiktor.forumapiusers.exception.RoleException;
 import pl.wiktor.forumapiusers.exception.UserException;
+import pl.wiktor.forumapiusers.management.model.UserManagementDTO;
 import pl.wiktor.forumapiusers.management.service.RoleManagementService;
 
 import java.text.MessageFormat;
+import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
@@ -30,6 +31,7 @@ public class RoleManagementController {
         }
 
         if (roles == null) {
+            roles = new HashSet<>();
             throw new RoleException(MessageFormat.format(RoleException.NAME_NOT_FOUND, roles.toString()));
         }
 
