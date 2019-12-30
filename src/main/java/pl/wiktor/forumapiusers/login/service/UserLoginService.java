@@ -41,7 +41,7 @@ public class UserLoginService implements UserDetailsService {
                     roles.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName()));
                 });
 
-        user.setLastLogin(LocalDateTime.now());
+        user.setLastLogin(LocalDateTime.now().withNano(0));
 
         userRepository.save(user);
 
