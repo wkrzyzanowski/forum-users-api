@@ -25,17 +25,14 @@ import pl.wiktor.forumapiusers.login.service.UserLoginService;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserLoginService userLoginService;
-
-    @Autowired
-    private JwtRequestFilter requestFilter;
-
     @Value("${authentication.auth.path}")
     String AUTH_ENDPOINT;
-
     @Value("${user.create.path}")
     String CREATE_USER_ENDPOINT;
+    @Autowired
+    private UserLoginService userLoginService;
+    @Autowired
+    private JwtRequestFilter requestFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -52,7 +49,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(AUTH_ENDPOINT);
+        web.ignoring().antMatchers(AUTH_ENDPOINT).antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
     }
 
     @Override
