@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.wiktor.forumapiusers.config.security.jwt.JwtUtil;
+import pl.wiktor.forumapiusers.config.security.jwt.TokenType;
 import pl.wiktor.forumapiusers.login.model.AuthRequest;
 import pl.wiktor.forumapiusers.login.model.AuthResponse;
 import pl.wiktor.forumapiusers.login.model.UserSecurity;
@@ -43,9 +44,10 @@ public class LoginController {
 
         final UserSecurity userSecurity = userLoginService.loadUserByUsername(authRequest.getUsername());
 
-        final String JWT = TOKEN_PREFIX + jwtUtil.generateToken(userSecurity);
+        final String JWT = TOKEN_PREFIX + jwtUtil.generateToken(userSecurity, TokenType.ACCESS);
+        final String REFRESH_JWT = TOKEN_PREFIX + jwtUtil.generateToken(userSecurity, TokenType.REFRESH);
 
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, JWT).body(AuthResponse.builder()
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, JWT, HttpHeaders.SET_COOKIE, REFRESH_JWT).body(AuthResponse.builder()
                 .username(userSecurity.getUsername())
                 .uuid(userSecurity.getUuid())
                 .roles(userSecurity.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))

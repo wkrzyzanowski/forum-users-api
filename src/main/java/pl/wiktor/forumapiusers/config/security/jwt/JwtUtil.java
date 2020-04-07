@@ -15,14 +15,14 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
 
-    @Value("${jwt.config.expirationTime}")
-    String TOKEN_EXPIRE_TIME;
-
-    @Value("${jwt.config.secret}")
-    String SECRET_KEY;
-
     final String UUID_CLAIM = "uuid";
     final String AUTHORITIES_CLAIM = "authorities";
+    @Value("${jwt.config.access.expirationTime}")
+    String ACCESS_TOKEN_EXPIRE_TIME;
+    @Value("${jwt.config.refresh.expirationTime}")
+    String REFRESH_TOKEN_EXPIRE_TIME;
+    @Value("${jwt.config.secret}")
+    String SECRET_KEY;
 
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -67,7 +67,7 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserSecurity userDetails) {
+    public String generateToken(UserSecurity userDetails, TokenType type) {
         Map<String, Object> claims = new HashMap<>();
 
         List<String> roles = new ArrayList<>();
@@ -79,12 +79,18 @@ public class JwtUtil {
 
         claims.put(AUTHORITIES_CLAIM, roles);
         claims.put(UUID_CLAIM, userDetails.getUuid());
-        return createToken(claims, userDetails.getUsername());
+        return createToken(claims, userDetails.getUsername(), type);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(Map<String, Object> claims, String subject, TokenType type) {
         long currentTime = System.currentTimeMillis();
-        long jwtExpirationTime = currentTime + Long.parseLong(TOKEN_EXPIRE_TIME);
+        long jwtExpirationTime;
+        if (type == TokenType.REFRESH) {
+            jwtExpirationTime = currentTime + Long.parseLong(REFRESH_TOKEN_EXPIRE_TIME);
+        } else {
+            jwtExpirationTime = currentTime + Long.parseLong(ACCESS_TOKEN_EXPIRE_TIME);
+        }
+
         return Jwts.builder()
                 .claim(AUTHORITIES_CLAIM, claims.get(AUTHORITIES_CLAIM))
                 .claim(UUID_CLAIM, claims.get(UUID_CLAIM))
