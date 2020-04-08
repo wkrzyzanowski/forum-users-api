@@ -19,6 +19,7 @@ public class UserLoginService implements UserDetailsService {
 
     public static final String ROLE_PREFIX = "ROLE_";
 
+    //TODO: This repository cannot be here - it should be used only when Token is created :)
     private UserRepository userRepository;
 
     public UserLoginService(UserRepository userRepository) {
